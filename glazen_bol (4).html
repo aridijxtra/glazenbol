@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>De Glazen Bol</title>
+<!-- 9. Modern strak lettertype: DM Sans + DM Serif Display -->
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,300;0,400;0,600;0,700;1,400&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+  :root {
+    --gold: #c9a84c;
+    --gold-light: #f0d080;
+    --gold-dark: #8a6a1a;
+    --deep: #07040e;
+    --surface: #110820;
+    --text-white: #ffffff;
+    --text-light: #e8dff5;
+    --text-dim: #9080a8;
+    --reel-bg: #0b0418;
+    --reel-border: #2e1260;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--deep);
+    color: var(--text-light);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-x: hidden;
+    background-image:
+      radial-gradient(ellipse at 20% 10%, rgba(80,20,130,0.45) 0%, transparent 50%),
+      radial-gradient(ellipse at 80% 80%, rgba(40,10,90,0.5)  0%, transparent 50%),
+      radial-gradient(ellipse at 50% 50%, rgba(18,5,35,0.85)  0%, transparent 80%);
+  }
+
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.55) 0%, transparent 100%),
+      radial-gradient(1px 1px at 30% 40%, rgba(255,255,255,0.35) 0%, transparent 100%),
+      radial-gradient(1px 1px at 55%  8%, rgba(255,255,255,0.65) 0%, transparent 100%),
+      radial-gradient(1px 1px at 72% 60%, rgba(255,255,255,0.28) 0%, transparent 100%),
+      radial-gradient(1px 1px at 85% 25%, rgba(255,255,255,0.45) 0%, transparent 100%),
+      radial-gradient(1px 1px at 20% 75%, rgba(255,255,255,0.38) 0%, transparent 100%),
+      radial-gradient(1px 1px at 90% 85%, rgba(255,255,255,0.55) 0%, transparent 100%),
+      radial-gradient(1px 1px at 45% 90%, rgba(255,255,255,0.28) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 65% 35%, rgba(201,168,76,0.55) 0%, transparent 100%),
+      radial-gradient(1.5px 1.5px at 15% 55%, rgba(201,168,76,0.38) 0%, transparent 100%);
+    pointer-events: none; z-index: 0;
+  }
+
+  .container {
+    position: relative; z-index: 1;
+    width: 100%; max-width: 500px;
+    padding: 24px 16px 48px;
+    display: flex; flex-direction: column; align-items: center;
+  }
+
+  /* ── GLAZEN BOL ── */
+  .bol-wrap {
+    width: 170px; height: 170px;
+    margin: 0 auto 18px;
+  }
+  .bol-wrap svg {
+    width: 100%; height: 100%;
+    filter: drop-shadow(0 0 24px rgba(130,90,255,0.55)) drop-shadow(0 0 8px rgba(201,168,76,0.28));
+    animation: float 5s ease-in-out infinite;
+  }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
+  .bol-mist  { animation: mist-a  8s ease-in-out infinite alternate; transform-origin:center; }
+  .bol-mist2 { animation: mist-b 11s ease-in-out infinite alternate; transform-origin:center; }
+  @keyframes mist-a { 0%{opacity:.18;transform:scale(1)   rotate(0deg)}  100%{opacity:.30;transform:scale(1.08) rotate(12deg)}  }
+  @keyframes mist-b { 0%{opacity:.20;transform:scale(1.05) rotate(0deg)} 100%{opacity:.10;transform:scale(.92)  rotate(-15deg)} }
+  .bol-glow-ring { animation: ring-p 4s ease-in-out infinite; }
+  @keyframes ring-p { 0%,100%{opacity:.28} 50%{opacity:.60} }
+
+  /* ── HEADER ── */
+  .header { text-align: center; margin-bottom: 20px; }
+
+  h1 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(2rem, 7vw, 2.8rem);
+    font-weight: 400;
+    color: var(--gold-light);
+    text-shadow: 0 0 28px rgba(201,168,76,0.45), 0 2px 4px rgba(0,0,0,0.7);
+    letter-spacing: 0.01em;
+    line-height: 1.1;
+  }
+
+  /* 8. Tagline groot, wit, prominent */
+  .tagline {
+    font-family: 'DM Sans', sans-serif;
+    font-size: clamp(1.15rem, 4.5vw, 1.45rem);
+    font-weight: 600;
+    color: #ffffff;
+    margin-top: 12px;
+    line-height: 1.35;
+    max-width: 360px;
+    margin-left: auto; margin-right: auto;
+  }
+
+  /* ── MACHINE ── */
+  .machine {
+    width: 100%;
+    background: linear-gradient(155deg, #18093a 0%, #0b0418 100%);
+    border: 1.5px solid var(--gold-dark);
+    border-radius: 18px;
+    padding: 18px 13px 22px;
+    box-shadow:
+      0 0 0 1px rgba(201,168,76,0.08),
+      0 0 40px rgba(90,20,160,0.28),
+      inset 0 1px 0 rgba(201,168,76,0.12),
+      inset 0 -1px 0 rgba(0,0,0,0.5);
+    position: relative; overflow: hidden;
+  }
+
+  /* Vage bol watermark achtergrond */
+  .machine-bol-bg {
+    position: absolute; inset: 0; pointer-events: none; z-index: 0;
+    display: flex; align-items: center; justify-content: center;
+    opacity: 0.11;
+  }
+  .machine-bol-bg svg { width: 340px; height: 340px; }
+
+  .machine::before {
+    content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+    opacity: 0.35; z-index: 1;
+  }
+  .machine > *:not(.machine-bol-bg) { position: relative; z-index: 2; }
+
+  /* Ornament */
+  .ornament {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 14px;
+  }
+  .ornament-line {
+    flex: 1; height: 1px;
+    background: linear-gradient(90deg, transparent, var(--gold-dark), transparent);
+  }
+  .ornament-text {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.68rem; font-weight: 600;
+    letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--gold); opacity: 0.8; white-space: nowrap;
+  }
+  .ornament-diamond { color: var(--gold); font-size: 0.65rem; }
+
+  /* ── REELS ── */
+  .reels-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 9px; margin-bottom: 16px;
+  }
+  .reel-wrapper { display: flex; flex-direction: column; gap: 5px; }
+
+  /* 4. Labels groter + bold */
+  .reel-label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.75rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--gold-light); text-align: center;
+  }
+
+  .reel {
+    background: var(--reel-bg);
+    border: 1px solid var(--reel-border);
+    border-radius: 10px; height: 110px;
+    display: flex; align-items: center; justify-content: center;
+    overflow: hidden; position: relative;
+    box-shadow:
+      inset 0 2px 8px rgba(0,0,0,0.6),
+      inset 0 0 18px rgba(50,10,90,0.3),
+      0 0 8px rgba(70,20,130,0.18);
+  }
+  .reel::after {
+    content: ''; position: absolute; inset: 0;
+    background: repeating-linear-gradient(0deg,transparent,transparent 3px,rgba(0,0,0,0.07) 3px,rgba(0,0,0,0.07) 4px);
+    pointer-events: none; z-index: 2;
+  }
+  .reel::before {
+    content: ''; position: absolute; left:0; right:0;
+    top:50%; transform:translateY(-50%); height:50px;
+    border-top:1px solid rgba(201,168,76,0.22);
+    border-bottom:1px solid rgba(201,168,76,0.22);
+    background:rgba(201,168,76,0.04);
+    z-index:1; pointer-events:none;
+  }
+  .reel-strip {
+    position: relative; z-index: 3;
+    display: flex; flex-direction: column; align-items: center;
+    width: 100%; padding: 0 4px;
+  }
+  .reel-item {
+    height: 110px;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    gap: 5px; width: 100%; padding: 6px;
+  }
+  /* 4+5. Begin: neutrale icon, geen label; na spin: label zichtbaar */
+  .reel-item .emoji { font-size: 2rem; line-height: 1; }
+  .reel-item .label {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem; font-weight: 400;
+    color: var(--text-light); text-align: center;
+    line-height: 1.25; max-width: 130px;
+  }
+
+  .reel.spinning .reel-strip { animation: spin-reel 0.09s linear infinite; }
+  @keyframes spin-reel { 0%{transform:translateY(0)} 100%{transform:translateY(-110px)} }
+
+  /* ── KNOP ── */
+  .btn-area { display:flex; flex-direction:column; align-items:center; gap:12px; }
+
+  .spin-btn {
+    background: linear-gradient(135deg, #c9a84c 0%, #f0d080 40%, #c9a84c 60%, #8a6a1a 100%);
+    color: #07040e;
+    border: none; border-radius: 50px;
+    padding: 14px 36px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1rem; font-weight: 700;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    box-shadow: 0 4px 0 #5a3d00, 0 6px 20px rgba(201,168,76,0.28), inset 0 1px 0 rgba(255,255,255,0.35);
+    transition: transform .1s, box-shadow .1s;
+    position: relative; overflow: hidden;
+  }
+  .spin-btn::after {
+    content:''; position:absolute; top:0; left:-100%; width:60%; height:100%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,0.28),transparent);
+    transform:skewX(-20deg); transition:left .4s;
+  }
+  .spin-btn:hover::after { left:160%; }
+  .spin-btn:active { transform:translateY(3px); box-shadow:0 1px 0 #5a3d00; }
+  .spin-btn:disabled { opacity:.6; cursor:not-allowed; transform:none; }
+
+  /* ── RESULT BOX ── */
+  .result-box {
+    width: 100%; margin-top: 18px;
+    background: rgba(16,5,32,0.92);
+    border: 1.5px solid var(--gold-dark);
+    border-radius: 14px;
+    padding: 20px 18px;
+    display: none; flex-direction: column;
+    animation: fadeInUp .4s ease;
+  }
+  .result-box.visible { display:flex; }
+  @keyframes fadeInUp { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
+
+  /* 5. Resultaat header */
+  .result-header { text-align:center; margin-bottom:18px; }
+  .result-header .spoken {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem; font-weight: 600;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: var(--gold); opacity: .8; display: block;
+  }
+  .result-header .over20 {
+    font-family: 'DM Serif Display', Georgia, serif;
+    font-size: clamp(1.7rem, 5.5vw, 2.4rem);
+    font-weight: 400; font-style: italic;
+    color: #ffffff;
+    text-shadow: 0 0 20px rgba(201,168,76,0.35);
+    display: block; margin-top: 4px; line-height: 1.1;
+  }
+
+  /* 2. Elke resultaatregel: vraag boven, antwoord eronder (stacked) */
+  .result-line {
+    display: flex; flex-direction: column;
+    gap: 3px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(201,168,76,0.1);
+  }
+  .result-line:last-of-type { border-bottom: none; }
+
+  /* 6. Betere contrast op screenshot: wit + helder */
+  .result-line .q {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.78rem; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--gold);
+  }
+  .result-line .a {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 1.08rem; font-weight: 600;
+    color: #ffffff;
+    line-height: 1.3;
+  }
+
+  /* 1. URL alleen zichtbaar voor screenshot-rendering, niet op pagina */
+  .result-url {
+    text-align: center; margin-top: 14px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.65rem; font-weight: 500;
+    color: var(--gold); letter-spacing: 0.12em;
+    /* Normaal verborgen; wordt zichtbaar gemaakt vóór html2canvas */
+    visibility: hidden; height: 0; overflow: hidden;
+    transition: none;
+  }
+  .result-url.show-for-screenshot {
+    visibility: visible; height: auto; overflow: visible;
+  }
+
+  /* ── SHARE ── */
+  .share-area { display:flex; gap:8px; margin-top:16px; justify-content:center; flex-wrap:wrap; }
+  .share-btn {
+    background: rgba(201,168,76,0.12);
+    border: 1px solid var(--gold-dark); color: var(--gold-light);
+    border-radius: 30px; padding: 9px 22px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.72rem; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    cursor: pointer; transition: background .2s;
+  }
+  .share-btn:hover { background:rgba(201,168,76,0.22); }
+  .share-btn:disabled { opacity:.5; cursor:not-allowed; }
+
+  /* ── GLOW ── */
+  .machine.glow { animation: glow-pulse 1.2s ease-out forwards; }
+  @keyframes glow-pulse {
+    0%  { box-shadow:0 0 0 1px rgba(201,168,76,0.08), 0 0 20px rgba(201,168,76,0.08); }
+    50% { box-shadow:0 0 0 2px rgba(201,168,76,0.38), 0 0 80px rgba(201,168,76,0.28), 0 0 120px rgba(100,30,200,0.45); }
+    100%{ box-shadow:0 0 0 1px rgba(201,168,76,0.18), 0 0 40px rgba(201,168,76,0.12), 0 0 60px rgba(80,20,160,0.28); }
+  }
+
+  .footer {
+    margin-top: 28px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.6rem; font-weight: 400;
+    color: var(--text-dim); letter-spacing: 0.14em;
+    text-align: center; opacity: .45;
+  }
+
+  @media (max-width: 400px) {
+    .bol-wrap { width:145px; height:145px; }
+    .reel { height:96px; }
+    .reel-item { height:96px; }
+    .reel-item .emoji { font-size:1.7rem; }
+    .reel-item .label { font-size:0.72rem; }
+    .spin-btn { padding:12px 22px; font-size:.9rem; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <!-- Glazen bol helemaal bovenaan -->
+  <div class="bol-wrap">
+    <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <radialGradient id="bolGrad" cx="38%" cy="32%" r="62%">
+          <stop offset="0%"   stop-color="#cdb8ff" stop-opacity="0.95"/>
+          <stop offset="25%"  stop-color="#7050c8" stop-opacity="0.88"/>
+          <stop offset="60%"  stop-color="#200840" stop-opacity="0.96"/>
+          <stop offset="100%" stop-color="#080210" stop-opacity="1"/>
+        </radialGradient>
+        <radialGradient id="bolHL" cx="35%" cy="28%" r="40%">
+          <stop offset="0%"   stop-color="white" stop-opacity="0.48"/>
+          <stop offset="60%"  stop-color="white" stop-opacity="0.04"/>
+          <stop offset="100%" stop-color="white" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="mG1" cx="50%" cy="60%" r="50%">
+          <stop offset="0%"   stop-color="#9070ff" stop-opacity="0.32"/>
+          <stop offset="100%" stop-color="#5030b0" stop-opacity="0"/>
+        </radialGradient>
+        <radialGradient id="mG2" cx="40%" cy="45%" r="50%">
+          <stop offset="0%"   stop-color="#70b0ff" stop-opacity="0.22"/>
+          <stop offset="100%" stop-color="#3070c0" stop-opacity="0"/>
+        </radialGradient>
+        <clipPath id="bClip"><circle cx="100" cy="94" r="76"/></clipPath>
+        <filter id="bGlow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="3.5" result="b"/>
+          <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+        <linearGradient id="gRing" x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0%"   stop-color="#f0d080"/>
+          <stop offset="40%"  stop-color="#c9a84c"/>
+          <stop offset="70%"  stop-color="#7a5a10"/>
+          <stop offset="100%" stop-color="#f0d080"/>
+        </linearGradient>
+        <linearGradient id="fG" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%"   stop-color="#4a2a80"/>
+          <stop offset="100%" stop-color="#140620"/>
+        </linearGradient>
+      </defs>
+      <!-- Glow ring -->
+      <circle class="bol-glow-ring" cx="100" cy="94" r="79" fill="none" stroke="#8050d0" stroke-width="3" opacity="0.3"/>
+      <!-- Voet -->
+      <ellipse cx="100" cy="177" rx="26" ry="5.5" fill="#2a1050" opacity="0.65"/>
+      <rect x="89" y="167" width="22" height="13" rx="4" fill="url(#fG)" opacity="0.88"/>
+      <ellipse cx="100" cy="167" rx="12" ry="3.5" fill="#6040a0" opacity="0.6"/>
+      <!-- Bol -->
+      <circle cx="100" cy="94" r="76" fill="url(#bolGrad)" filter="url(#bGlow)"/>
+      <g clip-path="url(#bClip)">
+        <!-- 4. Icoontjes in bol iets kleiner dan eerder -->
+        <ellipse class="bol-mist"  cx="100" cy="108" rx="60" ry="37" fill="url(#mG1)"/>
+        <ellipse class="bol-mist2" cx="90"  cy="88"  rx="50" ry="32" fill="url(#mG2)"/>
+        <!-- Kleine sterretjes -->
+        <circle cx="74"  cy="79"  r="1.2" fill="white" opacity="0.45"/>
+        <circle cx="114" cy="69"  r="0.9" fill="white" opacity="0.38"/>
+        <circle cx="128" cy="93"  r="1.2" fill="white" opacity="0.32"/>
+        <circle cx="64"  cy="103" r="0.9" fill="white" opacity="0.42"/>
+        <circle cx="104" cy="112" r="1.6" fill="#c0a0ff" opacity="0.38"/>
+        <!-- Vaag silhouet -->
+        <ellipse cx="100" cy="86" rx="6" ry="8" fill="#b090e0" opacity="0.10"/>
+        <rect x="95" y="94" width="10" height="15" rx="3" fill="#b090e0" opacity="0.08"/>
+        <!-- Horizon -->
+        <path d="M32 118 Q62 107 80 113 Q100 119 120 110 Q144 100 168 116"
+              stroke="#8060c8" stroke-width="1.2" fill="none" opacity="0.18"/>
+        <!-- Highlight + rand -->
+        <circle cx="100" cy="94" r="76" fill="url(#bolHL)"/>
+        <circle cx="100" cy="94" r="76" fill="none" stroke="rgba(0,0,0,0.38)" stroke-width="7"/>
+      </g>
+      <!-- Gouden rand -->
+      <circle cx="100" cy="94" r="76" fill="none" stroke="url(#gRing)" stroke-width="2.2"/>
+    </svg>
+  </div>
+
+  <!-- Titel + 8. Grote witte tagline -->
+  <div class="header">
+    <h1>De Glazen Bol</h1>
+    <p class="tagline">Druk op de knop en kom erachter hoe jij er over 20 jaar voor staat.</p>
+  </div>
+
+  <!-- Machine -->
+  <div class="machine" id="machine">
+
+    <!-- Vage bol als achtergrond watermark -->
+    <div class="machine-bol-bg">
+      <svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <radialGradient id="bbG" cx="38%" cy="32%" r="62%">
+            <stop offset="0%"   stop-color="#b8a0ff" stop-opacity="0.9"/>
+            <stop offset="35%"  stop-color="#6040b0" stop-opacity="0.8"/>
+            <stop offset="70%"  stop-color="#200840" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#080214" stop-opacity="1"/>
+          </radialGradient>
+          <radialGradient id="bbH" cx="35%" cy="28%" r="38%">
+            <stop offset="0%"   stop-color="white" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="white" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <circle cx="100" cy="100" r="90" fill="url(#bbG)"/>
+        <circle cx="100" cy="100" r="90" fill="url(#bbH)"/>
+        <circle cx="100" cy="100" r="90" fill="none" stroke="#c9a84c" stroke-width="1.5" opacity="0.45"/>
+      </svg>
+    </div>
+
+    <!-- 3. Ornament met tekst -->
+    <div class="ornament">
+      <div class="ornament-line"></div>
+      <div class="ornament-text">op de volgende gebieden</div>
+      <div class="ornament-line"></div>
+    </div>
+
+    <div class="reels-grid" id="reelsGrid"></div>
+
+    <div class="ornament" style="margin-top:4px;">
+      <div class="ornament-line"></div>
+      <div class="ornament-diamond">◆</div>
+      <div class="ornament-line"></div>
+    </div>
+
+    <div class="btn-area">
+      <button class="spin-btn" id="spinBtn" onclick="spinAll()">✦ Kijk in de toekomst ✦</button>
+    </div>
+  </div>
+
+  <!-- Resultaat -->
+  <div class="result-box" id="resultBox">
+    <div class="result-header">
+      <span class="spoken">✦ de bol heeft gesproken ✦</span>
+      <span class="over20">Over 20 jaar…</span>
+    </div>
+    <div id="resultLines"></div>
+    <!-- 1. URL verborgen op pagina, zichtbaar gemaakt net vóór screenshot -->
+    <div class="result-url" id="resultUrl"></div>
+    <div class="share-area">
+      <button class="share-btn" id="shareBtn" onclick="takeScreenshot()">📸 Laat het anderen weten</button>
+    </div>
+  </div>
+
+  <div class="footer">De toekomst is onzeker · druk zo vaak als je wilt</div>
+</div>
+
+<script>
+  const SITE_URL = window.location.href.replace(/\/$/, '');
+
+  const QUESTIONS = [
+    'Is jouw partner…',
+    'Heb jij last van…',
+    'Werk jij als…',
+    'Heb je een avontuur meegemaakt…',
+    'Woon je…',
+    'Kleed jij je…',
+  ];
+
+  // 5. Neutrale startpictogrammen per categorie
+  const NEUTRAL_ICONS = ['💑', '🏥', '💼', '🗺️', '🏠', '👗'];
+
+  const DATA = [
+    {
+      id: 'partner', label: 'Partner',
+      items: [
+        { emoji: '🍑', label: 'dik en knap' },
+        { emoji: '🪶', label: 'extreem dun' },
+        { emoji: '🦒', label: 'lang' },
+        { emoji: '🐛', label: 'kleiner' },
+        { emoji: '🌙', label: 'krom' },
+        { emoji: '😬', label: 'lelijk' },
+        { emoji: '🌹', label: 'bloedmooi' },
+      ]
+    },
+    {
+      id: 'gezondheid', label: 'Gezondheid',
+      items: [
+        { emoji: '🍭', label: 'diabetes' },
+        { emoji: '🔴', label: 'eczeem' },
+        { emoji: '🪨', label: 'haaruitval' },
+        { emoji: '🎢', label: 'schommelende hormonen' },
+        { emoji: '💪', label: 'zeer sterk' },
+        { emoji: '✨', label: 'supergezond' },
+        { emoji: '🏃', label: 'fit als een adolescent' },
+      ]
+    },
+    {
+      id: 'werk', label: 'Werk',
+      items: [
+        { emoji: '💻', label: 'programmeur' },
+        { emoji: '🛋️', label: 'rentenier' },
+        { emoji: '📈', label: 'belegger' },
+        { emoji: '📦', label: 'pakjes bezorger' },
+        { emoji: '🧱', label: 'bouwvakker' },
+        { emoji: '🎓', label: 'professor' },
+        { emoji: '📊', label: 'manager' },
+        { emoji: '🤠', label: 'cowboy' },
+      ]
+    },
+    {
+      id: 'avontuur', label: 'Avontuur',
+      items: [
+        { emoji: '🎠', label: 'in de Efteling' },
+        { emoji: '🌷', label: 'in Amsterdam' },
+        { emoji: '🚀', label: 'trip naar de maan' },
+        { emoji: '🪖', label: 'aan het front' },
+        { emoji: '👽', label: 'met aliens' },
+        { emoji: '🏛️', label: 'met de burgemeester' },
+        { emoji: '🌿', label: 'in het regenwoud' },
+      ]
+    },
+    {
+      id: 'woonplaats', label: 'Woonplaats',
+      items: [
+        { emoji: '🌆', label: 'in de stad' },
+        { emoji: '🌾', label: 'op het platteland' },
+        { emoji: '🦅', label: 'in Amerika' },
+        { emoji: '🌍', label: 'in Oeganda' },
+        { emoji: '🏢', label: 'in een flatje in Prokroskov' },
+        { emoji: '🐄', label: 'op een verbouwde boerderij' },
+        { emoji: '✈️', label: 'onder Schiphol' },
+      ]
+    },
+    {
+      id: 'stijl', label: 'Stijl',
+      items: [
+        { emoji: '🎩', label: 'chique' },
+        { emoji: '😵', label: 'verwaarloosd' },
+        { emoji: '🦚', label: 'opmerkelijk' },
+        { emoji: '🤡', label: 'belachelijk' },
+        { emoji: '📺', label: 'ouderwets' },
+        { emoji: '✂️', label: 'modieus' },
+        { emoji: '👴', label: 'als een bejaarde' },
+      ]
+    }
+  ];
+
+  let isSpinning = false;
+
+  function buildReels() {
+    const grid = document.getElementById('reelsGrid');
+    DATA.forEach((cat, ci) => {
+      const wrapper = document.createElement('div');
+      wrapper.className = 'reel-wrapper';
+
+      const lbl = document.createElement('div');
+      lbl.className = 'reel-label';
+      lbl.textContent = cat.label;
+
+      const reel = document.createElement('div');
+      reel.className = 'reel';
+      reel.id = 'reel-' + cat.id;
+
+      const strip = document.createElement('div');
+      strip.className = 'reel-strip';
+      strip.id = 'strip-' + cat.id;
+
+      // 5. Begin: alleen neutraal icoon, geen tekst, geen opties
+      const startEl = document.createElement('div');
+      startEl.className = 'reel-item';
+      startEl.innerHTML = `<span class="emoji">${NEUTRAL_ICONS[ci]}</span>`;
+      strip.appendChild(startEl);
+
+      reel.appendChild(strip);
+      wrapper.appendChild(lbl);
+      wrapper.appendChild(reel);
+      grid.appendChild(wrapper);
+    });
+  }
+
+  function pickRandom(arr) {
+    return arr[Math.floor(Math.random() * arr.length)];
+  }
+
+  // Bouw spin-strip met meerdere items voor animatie
+  function fillSpinStrip(strip, items) {
+    strip.innerHTML = '';
+    [...items, ...items, ...items].forEach(item => {
+      const el = document.createElement('div');
+      el.className = 'reel-item';
+      el.innerHTML = `<span class="emoji">${item.emoji}</span><span class="label">${item.label}</span>`;
+      strip.appendChild(el);
+    });
+  }
+
+  function spinAll() {
+    if (isSpinning) return;
+    isSpinning = true;
+
+    const btn = document.getElementById('spinBtn');
+    btn.disabled = true;
+    btn.textContent = '⟳ De bol kijkt…';
+
+    document.getElementById('resultBox').classList.remove('visible');
+    document.getElementById('machine').classList.remove('glow');
+
+    const results = {};
+    const stopDelays = [600, 900, 1200, 1500, 1800, 2100];
+
+    // Vul en start alle strips
+    DATA.forEach(cat => {
+      const strip = document.getElementById('strip-' + cat.id);
+      fillSpinStrip(strip, cat.items);
+      document.getElementById('reel-' + cat.id).classList.add('spinning');
+    });
+
+    DATA.forEach((cat, i) => {
+      const chosen = pickRandom(cat.items);
+      results[cat.id] = { ...chosen };
+
+      setTimeout(() => {
+        const reel  = document.getElementById('reel-' + cat.id);
+        const strip = document.getElementById('strip-' + cat.id);
+        reel.classList.remove('spinning');
+        strip.innerHTML = '';
+        const el = document.createElement('div');
+        el.className = 'reel-item';
+        // 7. Icoon ACHTER het woord (woord eerst, dan emoji)
+        el.innerHTML = `<span class="label" style="font-size:0.88rem;font-weight:600;color:#fff">${chosen.label}</span><span class="emoji" style="font-size:1.6rem">${chosen.emoji}</span>`;
+        strip.appendChild(el);
+
+        if (i === DATA.length - 1) {
+          setTimeout(() => {
+            showResults(results);
+            document.getElementById('machine').classList.add('glow');
+            btn.disabled = false;
+            btn.textContent = '✦ Kijk nog eens beter in de glazen bol ✦';
+            isSpinning = false;
+          }, 300);
+        }
+      }, stopDelays[i]);
+    });
+  }
+
+  function showResults(results) {
+    const box   = document.getElementById('resultBox');
+    const lines = document.getElementById('resultLines');
+    lines.innerHTML = '';
+
+    DATA.forEach((cat, i) => {
+      const r = results[cat.id];
+      const line = document.createElement('div');
+      line.className = 'result-line';
+      // 2. Vraag boven, antwoord eronder (stacked)
+      // 6. Hoog contrast: goud label, wit antwoord
+      // 7. Icoon achter het woord
+      line.innerHTML = `
+        <span class="q">${QUESTIONS[i]}</span>
+        <span class="a">${r.label} ${r.emoji}</span>`;
+      lines.appendChild(line);
+    });
+
+    // URL verborgen (wordt zichtbaar voor screenshot)
+    document.getElementById('resultUrl').textContent = '🔮 ' + SITE_URL;
+
+    box.classList.add('visible');
+    box.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  async function takeScreenshot() {
+    const btn   = document.getElementById('shareBtn');
+    const urlEl = document.getElementById('resultUrl');
+
+    btn.style.visibility = 'hidden';           // verberg knop op screenshot
+    urlEl.classList.add('show-for-screenshot'); // 1+3. toon URL, geen "even wachten"
+
+    await new Promise(r => setTimeout(r, 80)); // render tick
+
+    try {
+      const el = document.getElementById('resultBox');
+      const canvas = await html2canvas(el, {
+        backgroundColor: '#100520',
+        scale: 2,
+        useCORS: true,
+        logging: false,
+      });
+      const link = document.createElement('a');
+      link.download = 'mijn-toekomst-over-20-jaar.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
+    } catch(e) {
+      alert('Screenshot mislukt. Maak een schermafbeelding via je apparaat.');
+    }
+
+    // Herstel
+    urlEl.classList.remove('show-for-screenshot');
+    btn.style.visibility = '';
+  }
+
+  buildReels();
+</script>
+</body>
+</html>
